@@ -51,6 +51,7 @@ foodPrices = {allFoods[i]: itemPrices[i] for i in range(len(allFoods))}
 
 
 def price(item):
+    """Gets the price of an item"""
     return foodPrices.get(item)
 
 #Find best value Main
@@ -91,34 +92,3 @@ totalValue = bestMainPrice+bestSidePrice+bestDrinkPrice
 print(f"Total value: £{totalValue}")
 print(f"Actually paid: £{mealDealPrice}")
 print(f"Money saved: £{totalValue - mealDealPrice}")
-
-# allItems = soup.find_all("h3", class_="coop-c-card__title")
-
-# # food_sections = soup.find_all('div', class_='food-l-section')
-# # mainSoup = (food_sections[0])
-
-# # mainCount = 
-# print(f"Mains: ")
-# print(f"Sides: ")
-# print(f"Drinks: ")
-
-# print("Entire Menu:")
-# itemNames = []
-# itemWeights = []
-# for item in allItems:
-#     itemStr = str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
-#     listSpaced = itemStr#.split(" ")[:-1]
-#     itemName = str(listSpaced.split(" ")[:-1]).replace("[", "").replace("]", "").replace(",", "",).replace("\'", "") #str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
-#     itemWeight = listSpaced.split(" ")[-1]
-#     if itemWeight == "Sandwich":
-#         itemWeight = "Unknown"
-    
-#     # print(f"{itemName} - {itemWeight}")
-#     itemNames.append(itemName)
-#     itemWeights.append(itemWeight)
-
-
-
-
-# for i in range(0, len(itemNames)):
-#     print(f"Item: {itemNames[i]}, Weight: {itemWeights[i]}, Price: {itemPrices[i]}")
