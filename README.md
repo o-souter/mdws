@@ -8,6 +8,6 @@ As of the last update, this is:
 
 Total value: £8.65
 
-Actually paid: £4.0
+Actually paid: £4
 
 Money saved: £4.65
