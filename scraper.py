@@ -5,46 +5,120 @@ urls = {
     "coop" : "https://www.coop.co.uk/products/deals/lunchtime-meal-deal"
 }
 
+
 page = requests.get(urls.get("coop"))
+
 pageText = page.text
 cardCount = pageText.count("""<article class="coop-c-card coop-c-card--product coop-c-card--alcohol coop-l-flex__item">""")
-print(f"Number of food items found: {cardCount}")
 
 soup = BeautifulSoup(pageText, 'html.parser')
+def soupToSandwich(soup):
+    """Turn messy web soup of food items into clean list of food items"""
+    cleanList = []
+    for item in soup:
+        itemStr = str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
+        listSpaced = itemStr#.split(" ")[:-1]
+        itemName = str(listSpaced.split(" ")[:-1]).replace("[", "").replace("]", "").replace(",", "",).replace("\'", "") #str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
+        cleanList.append(itemName)
+    return cleanList
+
+mainFoodSection = soup.select("#mains .coop-c-card__title")
+mainFoods = soupToSandwich(mainFoodSection)
+sideFoodSection = soup.select("#snacks .coop-c-card__title")
+sideFoods = soupToSandwich(sideFoodSection)
+drinkSelection = soup.select("#drinks .coop-c-card__title")
+drinks = soupToSandwich(drinkSelection)
 
 
+print(f"{len(mainFoods)} Mains:")
+print(mainFoods)
+print(f"{len(sideFoods)} Sides:")
+print(sideFoods)
+print(f"{len(drinks)} Drinks:")
+print(drinks)
+allFoods = mainFoods + sideFoods + drinks
+print(f"Total items found: {len(allFoods)}")
 
-allItems = soup.find_all("h3", class_="coop-c-card__title")
 allPrices = soup.find_all("span", class_="coop-u-member-deal-blue")
 itemPrices = []
 for price in allPrices:
     # print(price.get_text())
-    itemPrices.append(price.get_text())
+    itemPrices.append(float(price.get_text().replace("£", "")))
 mains = soup.find(id="mains")
 
-# food_sections = soup.find_all('div', class_='food-l-section')
-# mainSoup = (food_sections[0])
+#Establish dict of all foods and their prices
+foodPrices = {allFoods[i]: itemPrices[i] for i in range(len(allFoods))}
 
-# mainCount = 
-print(f"Mains: ")
-print(f"Sides: ")
-print(f"Drinks: ")
 
-print("Entire Menu:")
-itemNames = []
-itemWeights = []
-for item in allItems:
-    itemStr = str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
-    listSpaced = itemStr#.split(" ")[:-1]
-    itemName = str(listSpaced.split(" ")[:-1]).replace("[", "").replace("]", "").replace(",", "",).replace("\'", "") #str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
-    itemWeight = listSpaced.split(" ")[-1]
-    if itemWeight == "Sandwich":
-        itemWeight = "Unknown"
+def price(item):
+    return foodPrices.get(item)
+
+#Find best value Main
+maxPrice = 0
+bestMain = None
+for m in mainFoods:
+    foodPrice = price(m)
+    if foodPrice > maxPrice:
+        maxPrice = foodPrice
+        bestMain = m
+
+maxPrice = 0
+bestSide = None
+for s in sideFoods:
+    foodPrice = price(s)
+    if foodPrice > maxPrice:
+        maxPrice = foodPrice
+        bestSide = s
+
+maxPrice = 0
+bestDrink = None
+for d in drinks:
+    foodPrice = price(d)
+    if foodPrice > maxPrice:
+        maxPrice = foodPrice
+        bestDrink = d
+
+bestMainPrice = price(bestMain)
+bestSidePrice = price(bestSide)
+bestDrinkPrice = price(bestDrink)
+mealDealPrice = 4.0
+print("\n----------------------------")
+print("Best meal deal calculated:")
+print(f"Main: {bestMain} (£{bestMainPrice})")
+print(f"Side: {bestSide} (£{bestSidePrice})")
+print(f"Drink: {bestDrink} (£{bestDrinkPrice})")
+totalValue = bestMainPrice+bestSidePrice+bestDrinkPrice
+print(f"Total value: £{totalValue}")
+print(f"Actually paid: £{mealDealPrice}")
+print(f"Money saved: £{totalValue - mealDealPrice}")
+
+# allItems = soup.find_all("h3", class_="coop-c-card__title")
+
+# # food_sections = soup.find_all('div', class_='food-l-section')
+# # mainSoup = (food_sections[0])
+
+# # mainCount = 
+# print(f"Mains: ")
+# print(f"Sides: ")
+# print(f"Drinks: ")
+
+# print("Entire Menu:")
+# itemNames = []
+# itemWeights = []
+# for item in allItems:
+#     itemStr = str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
+#     listSpaced = itemStr#.split(" ")[:-1]
+#     itemName = str(listSpaced.split(" ")[:-1]).replace("[", "").replace("]", "").replace(",", "",).replace("\'", "") #str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
+#     itemWeight = listSpaced.split(" ")[-1]
+#     if itemWeight == "Sandwich":
+#         itemWeight = "Unknown"
     
-    # print(f"{itemName} - {itemWeight}")
-    itemNames.append(itemName)
-    itemWeights.append(itemWeight)
+#     # print(f"{itemName} - {itemWeight}")
+#     itemNames.append(itemName)
+#     itemWeights.append(itemWeight)
 
 
-for i in range(0, len(itemNames)):
-    print(f"Item: {itemNames[i]}, Weight: {itemWeights[i]}, Price: {itemPrices[i]}")
+
+
+# for i in range(0, len(itemNames)):
+#     print(f"Item: {itemNames[i]}, Weight: {itemWeights[i]}, Price: {itemPrices[i]}")
