@@ -1,6 +1,6 @@
 This web scraper calculates the best value meal deal item at the coop.
 
-Currently, this is:
+As of the last update, this is:
 
    * Main: Co-op Tomato Basil And Chicken Pasta Salad (£3.45)
    * Side: Co-op Treat "Millionaires" Shortbread (£2.45)
