@@ -84,7 +84,7 @@ bestSidePrice = price(bestSide)
 bestDrinkPrice = price(bestDrink)
 mealDealPrice = 4.0
 print("\n----------------------------")
-print("Best meal deal calculated:")
+print("Best meal deal calculated (price):")
 print(f"Main: {bestMain} (£{bestMainPrice})")
 print(f"Side: {bestSide} (£{bestSidePrice})")
 print(f"Drink: {bestDrink} (£{bestDrinkPrice})")
