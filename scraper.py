@@ -16,7 +16,7 @@ def soupToSandwich(soup):
     """Turn messy web soup of food items into clean list of food items"""
     cleanList = []
     for item in soup:
-        itemStr = str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
+        itemStr = str(item).split(">")[1].replace("</h3", "").replace("&amp;", "and").replace("&", "and")
         listSpaced = itemStr#.split(" ")[:-1]
         itemName = str(listSpaced.split(" ")[:-1]).replace("[", "").replace("]", "").replace(",", "",).replace("\'", "") #str(item).split(">")[1].replace("</h3", "").replace("&amp;", "&")
         cleanList.append(itemName)
@@ -56,39 +56,71 @@ def price(item):
 
 #Find best value Main
 maxPrice = 0
+minPrice = 10.0
 bestMain = None
+worstMain = None
 for m in mainFoods:
     foodPrice = price(m)
     if foodPrice > maxPrice:
         maxPrice = foodPrice
         bestMain = m
+    if foodPrice < minPrice:
+        minPrice = foodPrice
+        worstMain = m
 
 maxPrice = 0
+minPrice = 10.0
 bestSide = None
+worstSide = None
 for s in sideFoods:
     foodPrice = price(s)
     if foodPrice > maxPrice:
         maxPrice = foodPrice
         bestSide = s
-
+    if foodPrice < minPrice:
+        minPrice = foodPrice
+        worstSide = s
 maxPrice = 0
+minPrice = 10.0
 bestDrink = None
+worstDrink = None
 for d in drinks:
     foodPrice = price(d)
     if foodPrice > maxPrice:
         maxPrice = foodPrice
         bestDrink = d
+    if foodPrice < minPrice:
+        minPrice = foodPrice
+        worstDrink = d
+mealDealPrice = 4.0
+def toMoney(num):
+    money = '{:.2f}'.format(num)
+    return money
 
 bestMainPrice = price(bestMain)
 bestSidePrice = price(bestSide)
 bestDrinkPrice = price(bestDrink)
-mealDealPrice = 4.0
+
+
 print("\n----------------------------")
 print("Best meal deal calculated (price):")
-print(f"Main: {bestMain} (£{bestMainPrice})")
-print(f"Side: {bestSide} (£{bestSidePrice})")
-print(f"Drink: {bestDrink} (£{bestDrinkPrice})")
+print(f"Main: {bestMain} (£{toMoney(bestMainPrice)})")
+print(f"Side: {bestSide} (£{toMoney(bestSidePrice)})")
+print(f"Drink: {bestDrink} (£{toMoney(bestDrinkPrice)})")
 totalValue = bestMainPrice+bestSidePrice+bestDrinkPrice
-print(f"Total value: £{totalValue}")
-print(f"Actually paid: £{mealDealPrice}")
-print(f"Money saved: £{totalValue - mealDealPrice}")
+print(f"Total value: £{toMoney(totalValue)}")
+print(f"Actually paid: £{toMoney(mealDealPrice)}")
+print(f"Money saved: £{toMoney(totalValue - mealDealPrice)}")
+
+worstMainPrice = price(worstMain)
+worstSidePrice = price(worstSide)
+worstDrinkPrice = price(worstDrink)
+print("\n----------------------------")
+print("Worst meal deal calculated (price):")
+print(f"Main: {worstMain} (£{toMoney(worstMainPrice)})")
+print(f"Side: {worstSide} (£{toMoney(worstSidePrice)})")
+print(f"Drink: {worstDrink} (£{toMoney(worstDrinkPrice)})")
+totalValue = worstMainPrice+worstSidePrice+worstDrinkPrice
+print(f"Total value: £{toMoney(totalValue)}")
+print(f"Actually paid: £{toMoney(mealDealPrice)}")
+print(f"Money saved: £{toMoney(totalValue - mealDealPrice)}")
