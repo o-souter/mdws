@@ -2,13 +2,16 @@ import requests
 from bs4 import BeautifulSoup
 
 urls = {
-    "coop" : "https://www.coop.co.uk/products/deals/lunchtime-meal-deal"
+    "coop" : "https://www.coop.co.uk/products/deals/lunchtime-meal-deal",
 }
 
 
+print("\nCoop Deals")
+print(f"Connecting to: {urls.get('coop')}")
 page = requests.get(urls.get("coop"))
 
 pageText = page.text
+
 cardCount = pageText.count("""<article class="coop-c-card coop-c-card--product coop-c-card--alcohol coop-l-flex__item">""")
 
 soup = BeautifulSoup(pageText, 'html.parser')
@@ -61,7 +64,7 @@ bestMain = None
 worstMain = None
 for m in mainFoods:
     foodPrice = price(m)
-    if foodPrice > maxPrice:
+    if foodPrice >= maxPrice:
         maxPrice = foodPrice
         bestMain = m
     if foodPrice < minPrice:
@@ -74,7 +77,7 @@ bestSide = None
 worstSide = None
 for s in sideFoods:
     foodPrice = price(s)
-    if foodPrice > maxPrice:
+    if foodPrice >= maxPrice:
         maxPrice = foodPrice
         bestSide = s
     if foodPrice < minPrice:
@@ -86,7 +89,7 @@ bestDrink = None
 worstDrink = None
 for d in drinks:
     foodPrice = price(d)
-    if foodPrice > maxPrice:
+    if foodPrice >= maxPrice:
         maxPrice = foodPrice
         bestDrink = d
     if foodPrice < minPrice:
@@ -101,8 +104,7 @@ bestMainPrice = price(bestMain)
 bestSidePrice = price(bestSide)
 bestDrinkPrice = price(bestDrink)
 
-
-print("\n----------------------------")
+print("----------------------------")
 print("Best meal deal calculated (price):")
 print(f"Main: {bestMain} (£{toMoney(bestMainPrice)})")
 print(f"Side: {bestSide} (£{toMoney(bestSidePrice)})")
@@ -124,3 +126,4 @@ totalValue = worstMainPrice+worstSidePrice+worstDrinkPrice
 print(f"Total value: £{toMoney(totalValue)}")
 print(f"Actually paid: £{toMoney(mealDealPrice)}")
 print(f"Money saved: £{toMoney(totalValue - mealDealPrice)}")
+
